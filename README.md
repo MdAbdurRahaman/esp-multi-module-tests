@@ -18,15 +18,12 @@ This repository contains standalone, self-contained test projects to verify hard
 This project performs a basic blink verification using the ESP32's built-in LED to confirm that code upload, serial communication, and the basic clock are working correctly.
 
 ### 📋 Hardware Stack
-- **Exact microcontroller board**: [ESP32 DevKit V1 (30-pin NodeMCU variant)](https://lastminuteengineers.com/wp-content/uploads/2018/12/ESP32-Pinout-30-Pin-NodeMCU-Development-Board.png)
+- **Exact microcontroller board**: [ESP32 DevKit V1 (38-pin variant)](https://europe1.discourse-cdn.com/arduino/original/4X/9/a/b/9abcaad3fd7d164799a08a7bec725500c67472b9.jpeg)
 - **Exact module**: On-board built-in Blue LED.
 
 ### 🔌 Pinout Mapping
 The on-board blue LED is hardwired to:
 - **GPIO 2** (defined as `LED_BUILTIN` in the sketch).
-
-### 🖼️ Reference Images
-- **ESP32 Pinout & Layout**: [Last Minute Engineers ESP32 30-Pin Layout Diagram](https://lastminuteengineers.com/wp-content/uploads/2018/12/ESP32-Pinout-30-Pin-NodeMCU-Development-Board.png)
 
 ---
 
@@ -35,8 +32,8 @@ The on-board blue LED is hardwired to:
 This project initializes the Wiznet W5500 Ethernet controller over the SPI bus, checks for hardware responsiveness via a version register diagnostic, requests an IP address via DHCP, and performs an HTTP GET request to verify internet connectivity.
 
 ### 📋 Hardware Stack
-- **Exact microcontroller board**: [ESP32 DevKit V1 (30-pin NodeMCU variant)](https://lastminuteengineers.com/wp-content/uploads/2018/12/ESP32-Pinout-30-Pin-NodeMCU-Development-Board.png)
-- **Exact module**: Wiznet W5500 SPI Ethernet Breakout Board (3.3V version).
+- **Exact microcontroller board**: [ESP32 DevKit V1 (38-pin variant)](https://europe1.discourse-cdn.com/arduino/original/4X/9/a/b/9abcaad3fd7d164799a08a7bec725500c67472b9.jpeg)
+- **Exact module**: [Wiznet W5500 SPI Ethernet Breakout Board (3.3V)](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qwLCZz0NghmSwr-9Fxo5HrWr2ck66eKnDAYgJ5CmN6vjGtEei5LU4Raq&s=10)
 
 ### 🔌 Pinout Mapping
 The W5500 connects to the ESP32 using the standard **VSPI** bus and control pins:
@@ -54,10 +51,6 @@ The W5500 connects to the ESP32 using the standard **VSPI** bus and control pins
 
 > [!WARNING]
 > Do not connect the W5500 VCC to the ESP32 5V/VIN pin. Doing so can permanently damage the ESP32 GPIOs and the W5500 chip.
-
-### 🖼️ Reference Images
-- **W5500 Breakout Pinout**: [W5500 Module Pinout Diagram](https://bruce.computer/wp-content/uploads/2018/10/W5500_Breakout.png)
-- **Wiring & Schematic Diagram**: [Interfacing WIZnet W5500 with ESP32 (CircuitState)](https://www.circuitstate.com/wp-content/uploads/2022/10/Interfacing-WIZnet-W5500-Ethernet-Controller-with-ESP32-using-Arduino-Framework-Schematic.png)
 
 ---
 
