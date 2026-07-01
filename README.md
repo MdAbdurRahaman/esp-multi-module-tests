@@ -26,6 +26,14 @@ This project performs a basic blink verification using the ESP32's built-in LED 
 The on-board blue LED is hardwired to:
 - **GPIO 2** (defined as `LED_BUILTIN` in the sketch).
 
+### ⚙️ Testing Procedure
+1. Compile and upload the sketch in `esp32_blink_test` to the ESP32.
+2. Open the Serial Monitor at **115200** baud.
+3. Observe the on-board blue LED on the ESP32 board. It will cycle:
+   - **ON** for 1 second.
+   - **OFF** for 1 second.
+4. The Serial Monitor will print `LED ON` and `LED OFF` in sync with the physical LED.
+
 ### 🖼️ ESP32 38-Pin Pinout Diagram
 ![ESP32 DevKit V1 38-Pin Pinout Diagram](https://europe1.discourse-cdn.com/arduino/original/4X/9/a/b/9abcaad3fd7d164799a08a7bec725500c67472b9.jpeg)
 
@@ -56,6 +64,16 @@ The W5500 connects to the ESP32 using the standard **VSPI** bus and control pins
 > [!WARNING]
 > Do not connect the W5500 VCC to the ESP32 5V/VIN pin. Doing so can permanently damage the ESP32 GPIOs and the W5500 chip.
 
+### ⚙️ Testing Procedure
+1. Connect the W5500 pins to the ESP32 as defined in the Pinout Mapping.
+2. Plug an active Ethernet LAN cable (connected to your router or switch) into the W5500 module.
+3. Compile and upload the sketch in `esp32_w5500_test` to the ESP32.
+4. Open the Serial Monitor at **115200** baud and reset the ESP32.
+5. Observe the Serial Monitor logs. You should see:
+   - **`Running SPI Hardware Diagnostic...`** -> Reading W5500 Version Register should print `0x04` and say `✅ SPI Communication with W5500 is working successfully!`.
+   - **`Querying DHCP for IP Address...`** -> DHCP should successfully assign a local IP address (e.g. `10.81.100.156`).
+   - **`Testing internet connectivity via Ethernet.h...`** -> The request to `api.ipify.org` should succeed and display your public IP address.
+
 ### 🖼️ W5500 Breakout Board Diagram
 ![Wiznet W5500 SPI Ethernet Pinout](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4qwLCZz0NghmSwr-9Fxo5HrWr2ck66eKnDAYgJ5CmN6vjGtEei5LU4Raq&s=10)
 
@@ -77,7 +95,7 @@ Based on your specific SIM900A module, connect the pins as follows:
    - Connect **GND / 0V** to the ground of the external supply.
 
 2. **Signal Connection (2x3 Red Header)**:
-   - Connect **VCC MCU** to the **3.3V** pin of the ESP32 (this powers the onboard level shifters to match the ESP32's 3.3V logic level).
+   - Connect **VCC MCU** to the **3.3V** pin of the ESP32 (this references the level shifter to match the ESP32's 3.3V logic level).
    - Connect **GND** to the **GND** pin of the ESP32 (common ground reference).
    - Connect **TXD 3.3V** to **GPIO 16 (RX2)** of the ESP32.
    - Connect **RXD 3.3V** to **GPIO 17 (TX2)** of the ESP32.
@@ -92,6 +110,26 @@ Based on your specific SIM900A module, connect the pins as follows:
 
 > [!WARNING]
 > Do NOT connect the ESP32 to **TXD 5V** or **RXD 5V** pins on the red header. The ESP32 is not 5V-tolerant and doing so may burn the serial pins on your ESP32.
+
+### ⚙️ Testing Procedure
+1. Insert an activated 2G-compatible SIM card (e.g. Grameenphone, Robi, or Banglalink with regular cash balance or active SMS bundle, and **SIM PIN lock disabled** in phone settings).
+2. Wire the SIM900A to the ESP32 and external 5V 2A power supply as mapped. Make sure to screw in the GSM antenna.
+3. Compile and upload the sketch in `esp32_sim900a_test` to the ESP32.
+4. Open the Serial Monitor at **115200** baud and reboot the ESP32.
+5. If the module LEDs do not light up, type **`PWR_KEY`** in the Serial Monitor input and press **Enter** to trigger a power pulse on GPIO 4, or press the physical key button on the SIM900A module.
+6. The module's **STATUS** LED should light up, and the **NET** LED will start blinking rapidly. Once it connects to the network, the **NET** LED will blink slowly (once every 3 seconds).
+7. View the diagnostic output on the Serial Monitor. It should show:
+   - `AT` response: `OK`
+   - `ATI` response: Module type info
+   - `AT+CPIN?` response: `+CPIN: READY`
+   - `AT+CSQ` response: Signal level (e.g. `+CSQ: 18,99`, higher is better)
+   - `AT+CREG?` response: `+CREG: 0,1` (Home network) or `0,5` (Roaming)
+8. **Interactive SMS Wizard**:
+   - In the Serial Monitor input, type **`SEND`** and press **Enter**.
+   - Type the receiver's phone number (in international format, e.g. `+88017XXXXXXXX`) and press **Enter**.
+   - Type the message text you want to send and press **Enter**.
+   - The ESP32 will send the commands and trigger SMS delivery!
+9. **Direct Passthrough**: You can also type any custom AT command directly in the input bar and press Enter to query the modem manually.
 
 ### 🖼️ SIM900A GSM Module Diagram
 ![SIM900A GSM Module Diagram](https://forum.fritzing.org/uploads/default/original/3X/8/c/8c3771051a328fbee4878beb90bd97192a71a4e3.jpeg)
