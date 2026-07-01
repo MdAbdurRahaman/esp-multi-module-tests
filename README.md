@@ -67,21 +67,31 @@ This project tests the SIM900A GSM module using standard Hardware Serial 2. It p
 
 ### 📋 Hardware Stack
 - **Exact microcontroller board**: [ESP32 DevKit V1 (38-pin variant)](https://europe1.discourse-cdn.com/arduino/original/4X/9/a/b/9abcaad3fd7d164799a08a7bec725500c67472b9.jpeg)
-- **Exact module**: [SIM900A GSM/GPRS Modem Module](https://forum.fritzing.org/uploads/default/original/3X/8/c/8c3771051a328fbee4878beb90bd97192a71a4e3.jpeg)
+- **Exact module**: [SIM900A GSM/GPRS Modem Module](https://forum.fritzing.org/uploads/default/original/3X/8/c/8c3771051a328fbee4878beb90bd97192a71a4e3.jpeg) (with 2x3 red level-shifter pin header).
 
 ### 🔌 Pinout Mapping
-The SIM900A connects to the ESP32 using UART Serial:
+Based on your specific SIM900A module, connect the pins as follows:
 
-| SIM900A Pin | ESP32 Pin | Purpose | Wire Color Recommendation |
+1. **Power Connection (White Terminal Block)**:
+   - Connect **VCC / 4-5V** to an external 5V 2A power supply.
+   - Connect **GND / 0V** to the ground of the external supply.
+
+2. **Signal Connection (2x3 Red Header)**:
+   - Connect **VCC MCU** to the **3.3V** pin of the ESP32 (this powers the onboard level shifters to match the ESP32's 3.3V logic level).
+   - Connect **GND** to the **GND** pin of the ESP32 (common ground reference).
+   - Connect **TXD 3.3V** to **GPIO 16 (RX2)** of the ESP32.
+   - Connect **RXD 3.3V** to **GPIO 17 (TX2)** of the ESP32.
+
+| SIM900A Red Header Pin | ESP32 Pin | Purpose | Connection Note |
 | :--- | :--- | :--- | :--- |
-| **5V / VCC** | **External 5V** | External Power Supply (Requires 5V, 2A peaks) | Red |
-| **GND** | **GND** | Common Ground (Must be shared with ESP32 GND) | Black |
-| **TXD** | **GPIO 16 (RX2)**| Hardware Serial 2 Receive Pin | Green |
-| **RXD** | **GPIO 17 (TX2)**| Hardware Serial 2 Transmit Pin | Blue |
-| **PWR / KEY**| **GPIO 4** | Optional Power Key trigger (Active LOW pulse) | Purple |
+| **VCC MCU** | **3.3V** | Reference voltage for level shifter | **CRITICAL for 3.3V ESP32 logic** |
+| **GND** | **GND** | Common Signal Ground | Shared reference |
+| **TXD 3.3V** | **GPIO 16 (RX2)** | Serial Data Transmit | From SIM900A to ESP32 RX |
+| **RXD 3.3V** | **GPIO 17 (TX2)** | Serial Data Receive | From ESP32 TX to SIM900A RX |
+| **RST (Bottom Pads)** | **GPIO 4** *(Optional)*| Hardware Reset / KEY pulse | Toggle boot manually/via code |
 
 > [!WARNING]
-> The SIM900A module consumes up to **2A** during network transmission bursts. Powering it directly from the ESP32's 5V/VIN or 3.3V pin will cause the ESP32 to brown out, reset, or damage the board. Always use an external 5V power supply (such as a 5V 2A wall adapter or high-current buck converter) and connect its ground to the ESP32 ground.
+> Do NOT connect the ESP32 to **TXD 5V** or **RXD 5V** pins on the red header. The ESP32 is not 5V-tolerant and doing so may burn the serial pins on your ESP32.
 
 ### 🖼️ SIM900A GSM Module Diagram
 ![SIM900A GSM Module Diagram](https://forum.fritzing.org/uploads/default/original/3X/8/c/8c3771051a328fbee4878beb90bd97192a71a4e3.jpeg)
